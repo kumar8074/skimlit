@@ -1,9 +1,9 @@
 import streamlit as st
 
 # Set the page config for dark mode
-st.set_page_config(page_title="ChatGPT Interface", page_icon="🤖", layout="wide", initial_sidebar_state="collapsed")
+st.set_page_config(page_title="SkimLit", page_icon="🤖", layout="wide", initial_sidebar_state="collapsed")
 
-# Custom CSS for dark theme
+# Custom CSS for dark theme and layout adjustments
 st.markdown(
     """
     <style>
@@ -38,6 +38,21 @@ st.markdown(
         background-color: #2c2c2c;
         text-align: left;
     }
+    /* Container for chat and input */
+    .chat-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 80vh;
+    }
+    .chat-box {
+        overflow-y: auto;
+        flex-grow: 1;
+        margin-bottom: 10px;
+    }
+    .input-box {
+        margin-top: auto;
+    }
     </style>
     """,
     unsafe_allow_html=True
@@ -56,12 +71,22 @@ if 'messages' not in st.session_state:
 
 st.title("🤖 ChatGPT Interface")
 
-# Display chat history
-for message in st.session_state.messages:
-    display_message(message['text'], message['is_user'])
+# Chat container
+with st.container():
+    st.markdown('<div class="chat-container">', unsafe_allow_html=True)
+    
+    # Chat history display
+    st.markdown('<div class="chat-box">', unsafe_allow_html=True)
+    for message in st.session_state.messages:
+        display_message(message['text'], message['is_user'])
+    st.markdown('</div>', unsafe_allow_html=True)
+    
+    # Input box at the bottom
+    st.markdown('<div class="input-box">', unsafe_allow_html=True)
+    user_input = st.text_input("You:", "", key="input", placeholder="Type your message here...")
+    st.markdown('</div>', unsafe_allow_html=True)
 
-# Text input
-user_input = st.text_input("You:", "", key="input")
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # Handle user input
 if user_input:
@@ -75,4 +100,5 @@ if user_input:
 
     # Clear input
     st.session_state.input = ""
+
 
